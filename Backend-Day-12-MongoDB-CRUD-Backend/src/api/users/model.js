@@ -19,6 +19,7 @@ const blogPostsSchema = new Schema(
       avatar: { type: String },
     },
     content: { type: String, required: false },
+    reviews: [],
   },
   {
     timestamps: true,

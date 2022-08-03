@@ -90,18 +90,24 @@ blogPostsRouter.delete("/:postId", async (req, res, next) => {
 
 blogPostsRouter.post("/:postId/reviews", async (req, res, next) => {
   try {
-    const blogPosts = await BlogPostsModel.find()
-    const index = blogPosts.findIndex((post) => post.postId === _id)
-    if (index !== -1) {
-      blogPosts[index].reviews.push({
-        ...newReviewData,
-        reviewId: uniqid(),
-        createdAt: new Date(),
-      })
-      //await writeMedia(blogPosts)
-
-      return blogPosts[index]
+    const blogIndex = await BlogPostsModel.findByIdAndUpdate(
+      req.params.postId,
+      req.body.reviews
+    )
+    const newReview = new ReviewsModal(req.body)
+    console.log(blogIndex)
+    console.log(newReview)
+    if (blogIndex !== -1) {
+      blogIndex.reviews.push(newReview)
+    } else {
+      return null
     }
+
+    // if (blogPosts) {
+    //   res.send(blogPosts)
+    // } else {
+    //   next(createHttpError(404, `User with id ${req.params.postId} not found!`))
+    // }
   } catch (error) {
     next(error)
   }
